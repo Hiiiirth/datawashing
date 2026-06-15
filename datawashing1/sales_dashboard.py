@@ -31,8 +31,8 @@ if start_date > end_date:
 df_filtered = df_full[(df_full['InvoiceDate'].dt.date >= start_date) &
                  (df_full['InvoiceDate'].dt.date <= end_date)].copy()
 @st.cache_data #缓存数据
-def load_data():
-    df = pd.read_csv(CSV_PATH)
+def load_data(path):
+    df = pd.read_csv(path)
     df['InvoiceDate'] = pd.to_datetime(df['InvoiceDate'])
     return df
 
