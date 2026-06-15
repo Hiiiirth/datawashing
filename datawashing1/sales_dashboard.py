@@ -31,12 +31,12 @@ if start_date > end_date:
 df_filtered = df_full[(df_full['InvoiceDate'].dt.date >= start_date) &
                  (df_full['InvoiceDate'].dt.date <= end_date)].copy()
 @st.cache_data #缓存数据
-def load_data(path):
-    df = pd.read_csv(path)
+def load_data(filepath):
+    df = pd.read_csv(filepath)
     df['InvoiceDate'] = pd.to_datetime(df['InvoiceDate'])
     return df
 
-df = load_data()
+df = load_data(CSV_PATH)
 
 st.subheader("每日销售额趋势")
 #按天聚合销售额
