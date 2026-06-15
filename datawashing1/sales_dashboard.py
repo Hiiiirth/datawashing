@@ -12,7 +12,7 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 CSV_PATH = os.path.join(BASE_DIR, "cleaned_sales.csv")
 
 st.sidebar.header("筛选条件")
-df_full = pd.read_csv("cleaned_sales.csv")
+df_full = pd.read_csv("../cleaned_sales.csv")
 df_full['InvoiceDate'] = pd.to_datetime(df_full['InvoiceDate'])
 min_date = df_full['InvoiceDate'].min().date()
 max_date = df_full['InvoiceDate'].max().date()
