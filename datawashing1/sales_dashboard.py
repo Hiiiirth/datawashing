@@ -11,14 +11,21 @@ st.title("销售自动化看板")
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 CSV_PATH = os.path.join(BASE_DIR, "cleaned_sales.csv")
 
+@st.cache_data #缓存数据
+def load_data(filepath):
+    df = pd.read_csv(filepath)
+    df['InvoiceDate'] = pd.to_datetime(df['InvoiceDate'])
+    df['Sales'] = df['Quantity'] * df['UnitPrice']
+    return df
+
+df = load_data(CSV_PATH)
+
 st.sidebar.header("筛选条件")
-df_full = pd.read_csv("../cleaned_sales.csv")
+df_full = pd.read_csv("cleaned_sales.csv")
 df_full['InvoiceDate'] = pd.to_datetime(df_full['InvoiceDate'])
 min_date = df_full['InvoiceDate'].min().date()
 max_date = df_full['InvoiceDate'].max().date()
 
-# --- 侧边栏日期选择（稳定版）---
-st.sidebar.header("筛选条件")
 start_date = st.sidebar.date_input("开始日期", value=min_date)
 end_date = st.sidebar.date_input("结束日期", value=max_date)
 
@@ -30,13 +37,9 @@ if start_date > end_date:
 # 把数据加载与过滤分开
 df_filtered = df_full[(df_full['InvoiceDate'].dt.date >= start_date) &
                  (df_full['InvoiceDate'].dt.date <= end_date)].copy()
-@st.cache_data #缓存数据
-def load_data(filepath):
-    df = pd.read_csv(filepath)
-    df['InvoiceDate'] = pd.to_datetime(df['InvoiceDate'])
-    return df
 
-df = load_data(CSV_PATH)
+
+
 
 st.subheader("每日销售额趋势")
 #按天聚合销售额
