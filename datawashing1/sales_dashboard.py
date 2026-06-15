@@ -1,10 +1,15 @@
 import streamlit as st
 import pandas as pd
 import plotly.express as px
+import os
 
 #page title
 st.set_page_config(page_title='销售看板' , layout="wide")
 st.title("销售自动化看板")
+
+# 动态定位 CSV 文件
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+CSV_PATH = os.path.join(BASE_DIR, "cleaned_sales.csv")
 
 st.sidebar.header("筛选条件")
 df_full = pd.read_csv("cleaned_sales.csv")
@@ -27,9 +32,8 @@ df_filtered = df_full[(df_full['InvoiceDate'].dt.date >= start_date) &
                  (df_full['InvoiceDate'].dt.date <= end_date)].copy()
 @st.cache_data #缓存数据
 def load_data():
-    df = pd.read_csv('cleaned_sales.csv')
+    df = pd.read_csv(CSV_PATH)
     df['InvoiceDate'] = pd.to_datetime(df['InvoiceDate'])
-    df['Sales'] = df['Quantity'] * df['UnitPrice']
     return df
 
 df = load_data()
